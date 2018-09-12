@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 
+<<<<<<< HEAD
 //mongoose.connect('mongodb://localhost/playground').then(() => {
+=======
+>>>>>>> ba4c97d6ec9ea197484da8ace40e5ea0edd731de
 mongoose.connect('mongodb://darren-user:lubimaya1@ds153552.mlab.com:53552/sandbox').then(() => {
   console.log('Connected to Database');
 }).catch((err) => {
@@ -51,6 +54,7 @@ const Course = mongoose.model('Course', courseSchema);
 
 async function createCourse() {
   const course = new Course({
+<<<<<<< HEAD
     author: 'Mary',
     name: 'JavaScript',
     tags: ['web'],
@@ -61,6 +65,18 @@ async function createCourse() {
   try {
     // await course.validate();
     const result = await course.save()
+=======
+    author: 'Bill',
+    name: 'Python',
+    tags: ['all-purpose'],
+    isPublished: true,
+    category: 'web',
+    price: 16
+  });
+  try {
+    // await course.validate();
+    const result = await course.save();
+>>>>>>> ba4c97d6ec9ea197484da8ace40e5ea0edd731de
     console.log(result);
   }
   catch(err) {
@@ -76,7 +92,11 @@ async function getCourses() {
     .find()
     // .limit(10)
     .or([{author: 'Mosh'}, {price: {$lte: 15}}])
+<<<<<<< HEAD
     .sort({ name: 1 });
+=======
+    .sort({ name: 1 })
+>>>>>>> ba4c97d6ec9ea197484da8ace40e5ea0edd731de
     // .count();
   console.log(courses);
 }
@@ -116,5 +136,9 @@ async function removeCourse(id) {
 
 createCourse();
 
+<<<<<<< HEAD
 // updateCourse('5a68fde3f09ad7646ddec17e');
+=======
+// updateCourse('5b973c39d204aa4c1ec7e976');
+>>>>>>> ba4c97d6ec9ea197484da8ace40e5ea0edd731de
 // removeCourse('5b7f81ba7d26455e07cb866f');
