@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/playground').then(() => {
+mongoose.connect('mongodb://darren-user:lubimaya1@ds153552.mlab.com:53552/sandbox').then(() => {
   console.log('Connected to Database');
 }).catch((err) => {
   console.log('Not Connected to Database ERROR!', err);
@@ -50,12 +50,12 @@ const Course = mongoose.model('Course', courseSchema);
 
 async function createCourse() {
   const course = new Course({
-    author: 'Joe',
-    name: 'Coffee Script',
-    tags: ['web'],
+    author: 'Bill',
+    name: 'Python',
+    tags: ['all-purpose'],
     isPublished: true,
     category: 'web',
-    price: 12.4
+    price: 16
   });
   try {
     // await course.validate();
@@ -115,5 +115,5 @@ async function removeCourse(id) {
 
 createCourse();
 
-// updateCourse('5a68fde3f09ad7646ddec17e');
+// updateCourse('5b973c39d204aa4c1ec7e976');
 // removeCourse('5b7f81ba7d26455e07cb866f');
