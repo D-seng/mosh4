@@ -3,7 +3,7 @@ const genres = require('./routes/genres');
 const express = require('express');
 const app = express();
 
-mongoose.connect('mongodb://localhost/vidly', { useNewUrlParser: true } )
+mongoose.connect('mongodb://darren-user:lubimaya1@ds023684.mlab.com:23684/vidly', { useNewUrlParser: true } )
   .then(() => console.log('Connected to Database'))
   .catch((err) => console.error('Not Connected to Database ERROR!'))
 
@@ -15,4 +15,3 @@ app.use('/api/genres', genres);
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening for vidly on port ${port}...`));
 
-// mongoose.set('debug', true);
