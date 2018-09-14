@@ -6,15 +6,23 @@ const genres = require('./routes/genres');
 const express = require('express');
 const app = express();
 
-mongoose.connect('mongodb://darren-user:lubimaya1@ds023684.mlab.com:23684/vidly', { useNewUrlParser: true } )
+const pword = config.get('db.password');
+mongoose.connect('mongodb://darren-user:' + pword + '@ds023684.mlab.com:23684/vidly', { useNewUrlParser: true } )
   .then(() => console.log('Connected to Database'))
   .catch((err) => console.error('Not Connected to Database ERROR!'))
 
 app.use(express.json());
+app.use(function(req, res, next) {
+  console.log('Logging...');
+  next();
+});
 app.use(helmet());
 
 console.log('Application Name: ' + config.get('name'));
-console.log('Application Host: ' + config.get('mail.host'));
+console.log('Mail Server: ' + config.get('mail.host'));
+console.log('Mail password: ' + config.get('mail.password'));
+
+// console.log(`NODE_ENV: ${process.env.NODE_ENV}`); can get the ENV this way too.
 
 if (app.get('env') === 'development') {
   app.use(morgan('tiny'));
@@ -22,7 +30,7 @@ if (app.get('env') === 'development') {
 } 
 
 
-// app.use('/api/genres', genres);
+app.use('/api/genres', genres);
 // app.use(app.router);
 // genres.initialize(app);
 

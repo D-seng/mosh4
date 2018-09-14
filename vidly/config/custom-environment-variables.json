@@ -1,0 +1,10 @@
+{
+  "mail": {
+    "host": "dev-mail-server",
+    "password": "app_password"
+  },
+  "db": {
+    "password": "db_password"
+  }
+
+}
