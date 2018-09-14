@@ -29,4 +29,3 @@ if (app.get('env') === 'development') {
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening for vidly on port ${port}...`));
 
-// mongoose.set('debug', true);
