@@ -11,8 +11,7 @@ const rentalSchema = new mongoose.Schema({
   movie: {
     type: movieSchema,
     required: true
-  },
-  dateCheckedOut: Date
+  }
 })
 
 const Rental = mongoose.model('Rental', rentalSchema);
