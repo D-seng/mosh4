@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { Customer } = require('../models/customer');
-const { Rental } = require('../models/rental')
+const { Movie } = require('../models/movie');
+const { Rental } = require('../models/rental');
 
-  / To render html, see Express - Advanced Topics, Lesson 9. It uses Pug as an example, but see how to use Vue.
-    // List all genres.
-    router.get('/', async (req, res) => {
+  // To render html, see Express - Advanced Topics, Lesson 9. It uses Pug as an example, but see how to use Vue.
+    // List all rentals.
+  router.get('/', async (req, res) => {
       const rentals = await Rental.find().sort('title');
       res.send(rentals);
     });
@@ -15,7 +16,9 @@ router.post('/', async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const movie = await Movie.findById(req.body.movieId);
+  // Make sure the movie and customer exist before combining them
+  // to create a rental.
+  let movie = await Movie.findById(req.body.movieId);
   if (!movie) return res.status(400).send('Invalid movie.');
 
   const customer = await Customer.findById(req.body.customerId);
@@ -24,7 +27,7 @@ router.post('/', async (req, res) => {
   // Use only two properties of the embedded genre object because it could have other properties
   // and because it will definitely have a version id (which we don't want)
   // created by MongoDB. 
-  let movie = new Movie({
+  movie = new Movie({
     title: req.body.title,
     genre: {
       _id: genre._id,
@@ -63,4 +66,4 @@ router.get('/:id', async (req, res) => {
   res.send(movie);
 })
 
-module.exports = route
+module.exports = router

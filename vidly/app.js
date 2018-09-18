@@ -7,29 +7,22 @@ const mongoose = require('mongoose');
 const genres = require('./routes/genres');
 const customers = require('./routes/customers');
 const movies = require('./routes/movies');
+const rentals = require('./routes/rentals');
 const { Movie, validate } = require('./models/movie');
 const express = require('express');
 const app = express();
 const { Genre } = require('./models/genre')
+const { Rental } = require('./models/rental')
 
 const pword = config.get('db.password');
 
-const db = "local"
-
-
-
-// function connect(db) {
-//   const connectionString = if (db === 'local') {
-//     'mongodb://localhost'
-//   } else {
-//     'mongodb://darren-user:' + pword + '@ds023684.mlab.com:23684/vidly'
-//   }
+// const db = 'local'
 
 mongoose.connect('mongodb://darren-user:' + pword + '@ds023684.mlab.com:23684/vidly', { useNewUrlParser: true } )
   .then(() => console.log('Connected to Database'))
-  .catch((err) => console.error('Not Connected to Database ERROR!'))
-}
-connect('local');
+  .catch((err) => console.error('Not Connected to Database ERROR!'));
+
+// connect('local');
 
 app.use(express.json());
 app.use(function(req, res, next) {
@@ -52,6 +45,7 @@ if (app.get('env') === 'development') {
 app.use('/api/genres', genres);
 app.use('/api/customers', customers);
 app.use('/api/movies', movies);
+app.use('/api/rentals', rentals);
 // app.use(app.router);
 // genres.initialize(app);
 
@@ -69,4 +63,19 @@ async function createMovie(title, genre, numberInStock, dailyRentalRate){
   console.log(result);
 }
 
-createMovie('Rocky', new Genre({ name: 'Drama' }) , 5, 4)
+async function createRental(customerId, movieId) {
+  const rental = new Rental( {
+    customer: customerId,
+    movie: movieId
+  });
+  const result = await rental.save();
+  console.log(result);
+
+  // Next: return the names of the customer and title, etc., of the movie.
+}
+
+createRental('5b9d64be992bee1c7b5e6331', '5b9eece320ca0a2332ac194a');
+
+
+// createMovie('Rocky', new Genre({ name: 'Drama' }) , 5, 4)
+

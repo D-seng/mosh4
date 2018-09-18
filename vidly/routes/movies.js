@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Genre } = require('../models/genre');
-const { Movie } = require('../models/movie') 
+const { Movie, validate } = require('../models/movie') 
 
 //To render html, see Express - Advanced Topics, Lesson 9. It uses Pug as an example, but see how to use Vue.
 // List all genres.

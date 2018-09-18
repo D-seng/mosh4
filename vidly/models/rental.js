@@ -9,8 +9,8 @@ const rentalSchema = new mongoose.Schema({
     ref: 'Customer'
   },
   movie: {
-    type: movieSchema,
-    required: true
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Movie'
   }
 })
 
