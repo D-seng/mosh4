@@ -74,7 +74,7 @@ async function createRental(customerId, movieId) {
   // Next: return the names of the customer and title, etc., of the movie.
 }
 
-createRental('5b9d64be992bee1c7b5e6331', '5b9eece320ca0a2332ac194a');
+// createRental('5b9d64be992bee1c7b5e6331', '5b9eece320ca0a2332ac194a');
 
 
 // createMovie('Rocky', new Genre({ name: 'Drama' }) , 5, 4)

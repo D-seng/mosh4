@@ -2,24 +2,27 @@ const express = require('express');
 const router = express.Router();
 const { Customer } = require('../models/customer');
 const { Movie } = require('../models/movie');
-const { Rental } = require('../models/rental');
+const { Rental, validate } = require('../models/rental');
 
   // To render html, see Express - Advanced Topics, Lesson 9. It uses Pug as an example, but see how to use Vue.
     // List all rentals.
   router.get('/', async (req, res) => {
-      const rentals = await Rental.find().sort('title');
+      const rentals = await Rental.find().sort('-dateCheckedOut');
       res.send(rentals);
     });
 
-// Add a genre.
+// Add a rental.
 router.post('/', async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   // Make sure the movie and customer exist before combining them
   // to create a rental.
-  let movie = await Movie.findById(req.body.movieId);
+  const movie = await Movie.findById(req.body.movieId);
+  console.log(req.body.movieId);
   if (!movie) return res.status(400).send('Invalid movie.');
+
+  if (movie.numberInStock === 0) return res.status(400).send('Movie not in stock.');
 
   const customer = await Customer.findById(req.body.customerId);
   if (!customer) return res.status(400).send('Invalid customer.');
@@ -27,21 +30,29 @@ router.post('/', async (req, res) => {
   // Use only two properties of the embedded genre object because it could have other properties
   // and because it will definitely have a version id (which we don't want)
   // created by MongoDB. 
-  movie = new Movie({
-    title: req.body.title,
-    genre: {
-      _id: genre._id,
-      name: genre.name
+  let rental = new Rental({
+    customer: {
+      _id: customer._id,
+      name: customer.name,
+      phone: customer.phone
     },
-    numberInStock: req.body.numberInStock,
-    dailyRentalRate: req.body.dailyRentalRate
+    movie: {
+      _id: movie._id,
+      title: movie.title,
+      dailyRentalRate: movie.dailyRentalRate
+    }
   });
-  movie = await movie.save();
-  res.send(movie);
+
+  rental = await rental.save();
+
+  movie.numberInStock--;
+  movie.save();
+
+  res.send(rental);
 }
 );
 
-// Modify a genre.
+// Modify a rental.
 router.put('/:id', async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
@@ -53,7 +64,7 @@ router.put('/:id', async (req, res) => {
 
 });
 
-// Delete a genre.
+// Delete a rental.
 router.delete('/:id', async (req, res) => {
   const movie = await Genre.findByIdAndRemove(req.params.id);
   if (!movie) return res.status(400).send('Movie not found');
