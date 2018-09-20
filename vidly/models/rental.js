@@ -5,6 +5,7 @@ Joi.objectId = require('joi-objectid')(Joi);
   // 1-pass a reference to the Joi module
   // 2-set the objectId property on Joi to the function
 
+
 // const { movie } = require('./movie');
 // const { Customer } = require('./customer');
 
@@ -68,8 +69,8 @@ const Rental = mongoose.model('Rental', rentalSchema);
 // will be set by the server, not by the user.
 function validateRental(rental) {
   const schema = {
-    customerId: Joi.string().required(),
-    movieId: Joi.string().required()
+    customerId: Joi.objectId().required(),
+    movieId: Joi.objectId().required()
   }
   return Joi.validate(rental, schema)
 }

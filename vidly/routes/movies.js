@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
   // Use only two properties of the embedded genre object because it could have other properties
   // and because it will definitely have a version id (which we don't want)
   // created by MongoDB. 
-  let movie = new Movie({ 
+  const movie = new Movie({ 
     title: req.body.title,
     genre: {
       _id: genre._id,
@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
     },
     numberInStock: req.body.numberInStock,
     dailyRentalRate: req.body.dailyRentalRate});
-  movie = await movie.save();
+  await movie.save();
   res.send(movie);
 }
 );

@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const { Customer } = require('../models/customer');
 const { Movie } = require('../models/movie');
 const { Rental, validate } = require('../models/rental');
+const Fawn = require('fawn');
 
+Fawn.init(mongoose);
   // To render html, see Express - Advanced Topics, Lesson 9. It uses Pug as an example, but see how to use Vue.
     // List all rentals.
   router.get('/', async (req, res) => {
@@ -18,8 +21,9 @@ router.post('/', async (req, res) => {
 
   // Make sure the movie and customer exist before combining them
   // to create a rental.
+  
   const movie = await Movie.findById(req.body.movieId);
-  console.log(req.body.movieId);
+  // console.log(req.body.movieId);
   if (!movie) return res.status(400).send('Invalid movie.');
 
   if (movie.numberInStock === 0) return res.status(400).send('Movie not in stock.');
@@ -30,10 +34,11 @@ router.post('/', async (req, res) => {
   // Use only two properties of the embedded genre object because it could have other properties
   // and because it will definitely have a version id (which we don't want)
   // created by MongoDB. 
-  let rental = new Rental({
+  const rental = new Rental({
     customer: {
       _id: customer._id,
       name: customer.name,
+      isGold: customer.isGold,
       phone: customer.phone
     },
     movie: {
@@ -43,10 +48,22 @@ router.post('/', async (req, res) => {
     }
   });
 
-  rental = await rental.save();
+try {
+  new Fawn.Task()
+    .save('rentals', rental)
+    .update('movies', { _id: movie._id }, {
+      $inc: { numberInStock: -1 }
+    })
+    .run();
+  } catch(ex) {
+  res.status(500).send("Rental didn't save");
+  }
 
-  movie.numberInStock--;
-  movie.save();
+
+  // await rental.save();
+
+  // movie.numberInStock--;
+  // movie.save();
 
   res.send(rental);
 }
