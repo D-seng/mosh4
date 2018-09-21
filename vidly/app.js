@@ -10,10 +10,12 @@ const genres = require('./routes/genres');
 const customers = require('./routes/customers');
 const movies = require('./routes/movies');
 const rentals = require('./routes/rentals');
-const { Movie, validate } = require('./models/movie');
+const users = require('./routes/users');
+const auth = require('./routes/auth');
+
+const { Movie } = require('./models/movie');
 const express = require('express');
 const app = express();
-const { Genre } = require('./models/genre')
 const { Rental } = require('./models/rental')
 
 const pword = config.get('db.password');
@@ -48,6 +50,9 @@ app.use('/api/genres', genres);
 app.use('/api/customers', customers);
 app.use('/api/movies', movies);
 app.use('/api/rentals', rentals);
+app.use('/api/users', users);
+app.use('/api/auth', auth);
+
 // app.use(app.router);
 // genres.initialize(app);
 
