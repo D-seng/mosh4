@@ -33,8 +33,14 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 5,
     maxlength: 100
-  }
+  },
+  isAdmin: Boolean
 });
+
+// userSchema.methods returns an object.
+// Add a key-value pair to that object.
+// Use ES5 function notation because in arrow functions,
+// 'this' refers to the calling function, not the object.
 
 userSchema.methods.generateAuthToken = function () {
   const token = jwt.sign({ _id: this._id }, config.get('jwtPrivateKey'));
