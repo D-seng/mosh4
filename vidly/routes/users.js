@@ -8,6 +8,8 @@ const { User, validate } = require('../models/user');
 
 
 // Get current user.
+// Because it's middleware, auth will run before we get
+// to async (req, res).
 
 router.get('/me', auth, async (req, res) => {
   const user = await User.findById(req.user._id).select('-password');

@@ -1,3 +1,4 @@
+const error = require('./middleware/error');
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 const startupDebugger = require('debug')('app:startup');
@@ -57,6 +58,11 @@ app.use('/api/movies', movies);
 app.use('/api/rentals', rentals);
 app.use('/api/users', users);
 app.use('/api/auth', auth);
+
+// Registering the error middleware function here means it
+// will be the next function in the middleware pipeline.
+app.use(error);
+
 
 // app.use(app.router);
 // genres.initialize(app);

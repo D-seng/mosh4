@@ -1,13 +1,19 @@
 const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 const express = require('express');
 const router = express.Router();
 const { Genre, validate } = require('../models/genre');
 
 //To render html, see Express - Advanced Topics, Lesson 9. It uses Pug as an example, but see how to use Vue.
 // List all genres.
-router.get('/', async (req, res) => {
-  const genres = await Genre.find().sort('name');
-  res.send(genres);
+router.get('/', async (req, res, next) => {
+  try {
+    const genres = await Genre.find().sort('name');
+    res.send(genres);
+  }
+catch(e) {
+  next(e);
+}
 });
 
 // Add a genre.
@@ -42,7 +48,7 @@ router.delete('/:id', auth, async (req, res) => {
   res.send(genre);
 })
 
-router.get('/:id', auth, async (req, res) => {
+router.get('/:id', [auth, admin], async (req, res) => {
   const genre = await Genre.findById(req.params.id);
   if (!genre) return res.status(400).send('Genre not found');
   res.send(genre);
