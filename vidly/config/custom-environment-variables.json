@@ -1,10 +1,11 @@
 {
-  "mail": {
-    "host": "dev-mail-server",
-    "password": "app_password"
-  },
+    "mail": {
+      "host": "dev-mail-server",
+      "password": "app_password"
+    },
   "db": {
     "password": "db_password"
-  }
+  },
+  "jwtPrivateKey": "vidly_jwtPrivateKey"
 
 }

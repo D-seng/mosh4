@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+const config = require('config');
 const Joi = require('joi');
 const PasswordComplexity = require('joi-password-complexity');
 const mongoose = require('mongoose');
@@ -31,9 +33,24 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 5,
     maxlength: 100
-  }
+  },
+  isAdmin: Boolean
 });
 
+// userSchema.methods returns an object.
+// Add a key-value pair to that object.
+// Use ES5 function notation because in arrow functions,
+// 'this' refers to the calling function, not the object.
+
+userSchema.methods.generateAuthToken = function () {
+  const token = jwt.sign(
+    { 
+    _id: this._id, 
+    isAdmin: this.isAdmin 
+    }, 
+    config.get('jwtPrivateKey'));
+  return token;
+}
 const User = mongoose.model('User', userSchema);
 
 function validateUser(user) {
@@ -48,6 +65,7 @@ function validateUser(user) {
   // return Joi.validate(userSchema.password, new PasswordComplexity(complexityOptions), (err, value) => {
 
   }
+
 
 exports.User = User;
 exports.validate = validateUser;

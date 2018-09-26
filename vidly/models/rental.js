@@ -1,6 +1,5 @@
-const Joi = require('joi');
 const mongoose = require('mongoose');
-Joi.objectId = require('joi-objectid')(Joi);
+const Joi = require('joi');
 // Returns a function, so we:
   // 1-pass a reference to the Joi module
   // 2-set the objectId property on Joi to the function

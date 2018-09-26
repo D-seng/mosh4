@@ -1,3 +1,4 @@
+const error = require('./middleware/error');
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 const startupDebugger = require('debug')('app:startup');
@@ -20,6 +21,11 @@ const { Rental } = require('./models/rental')
 
 const pword = config.get('db.password');
 
+if (!config.get('jwtPrivateKey')) {
+  console.log('ERROR: jwtPrivateKey is not defined.');
+  process.exit(1);
+}
+
 // const db = 'local'
 
 mongoose.connect('mongodb://darren-user:' + pword + '@ds023684.mlab.com:23684/vidly', { useNewUrlParser: true } )
@@ -36,8 +42,8 @@ app.use(function(req, res, next) {
 app.use(helmet());
 
 console.log('Application Name: ' + config.get('name'));
-console.log('Mail Server: ' + config.get('mail.host'));
-console.log('Mail password: ' + config.get('mail.password'));
+// console.log('Mail Server: ' + config.get('mail.host'));
+// console.log('Mail password: ' + config.get('mail.password'));
 
 // console.log(`NODE_ENV: ${process.env.NODE_ENV}`); can get the ENV this way too.
 
@@ -52,6 +58,11 @@ app.use('/api/movies', movies);
 app.use('/api/rentals', rentals);
 app.use('/api/users', users);
 app.use('/api/auth', auth);
+
+// Registering the error middleware function here means it
+// will be the next function in the middleware pipeline.
+app.use(error);
+
 
 // app.use(app.router);
 // genres.initialize(app);

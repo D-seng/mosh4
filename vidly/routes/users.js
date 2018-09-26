@@ -1,4 +1,5 @@
-const bcrypt = require('bcrypt');
+const auth = require('../middleware/auth');
+const bcrypt = require('bcryptjs');
 const _ = require('lodash');
 const express = require('express');
 // const mongoose = require('mongoose');
@@ -6,6 +7,14 @@ const router = express.Router();
 const { User, validate } = require('../models/user');
 
 
+// Get current user.
+// Because it's middleware, auth will run before we get
+// to async (req, res).
+
+router.get('/me', auth, async (req, res) => {
+  const user = await User.findById(req.user._id).select('-password');
+  res.send(user);
+});
 
 // Add a user.
 router.post('/', async (req, res) => {
@@ -23,7 +32,8 @@ router.post('/', async (req, res) => {
   
   await user.save();
  
-  res.send(_.pick(user, ['name', 'email']));
+  const token = user.generateAuthToken();
+  res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email']));
 });
 
 module.exports = router;
