@@ -1,3 +1,4 @@
+require('express-async-errors');
 const error = require('./middleware/error');
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
@@ -27,10 +28,14 @@ if (!config.get('jwtPrivateKey')) {
 }
 
 // const db = 'local'
-
-mongoose.connect('mongodb://darren-user:' + pword + '@ds023684.mlab.com:23684/vidly', { useNewUrlParser: true } )
+mongoose.connect('mongodb://localhost/vidly', { useNewUrlParser: true })
   .then(() => console.log('Connected to Database'))
   .catch((err) => console.error('Not Connected to Database ERROR!'));
+
+
+// mongoose.connect('mongodb://darren-user:' + pword + '@ds023684.mlab.com:23684/vidly', { useNewUrlParser: true } )
+//   .then(() => console.log('Connected to Database'))
+//   .catch((err) => console.error('Not Connected to Database ERROR!'));
 
 // connect('local');
 
@@ -60,7 +65,10 @@ app.use('/api/users', users);
 app.use('/api/auth', auth);
 
 // Registering the error middleware function here means it
-// will be the next function in the middleware pipeline.
+// will be the last function in the middleware pipeline.
+// By putting it last, the next(e) statements in the 
+// catch blocks of middleware functions will find their way here.
+
 app.use(error);
 
 

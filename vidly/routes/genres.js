@@ -1,3 +1,4 @@
+const asyncMiddleware = require('../middleware/asyncMiddleware');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
 const express = require('express');
@@ -6,19 +7,15 @@ const { Genre, validate } = require('../models/genre');
 
 //To render html, see Express - Advanced Topics, Lesson 9. It uses Pug as an example, but see how to use Vue.
 // List all genres.
-router.get('/', async (req, res, next) => {
-  try {
+
+router.get('/', asyncMiddleware(async (req, res) => {
     const genres = await Genre.find().sort('name');
     res.send(genres);
-  }
-catch(e) {
-  next(e);
-}
-});
+}));
 
 // Add a genre.
 // Second argument is optional middleware.
-router.post('/', auth, async (req, res) => {
+router.post('/', auth, (async (req, res) => {
   const { error } = validate(req.body);
 
   if (error) return res.status(404).send(error.details[0].message);
@@ -26,7 +23,7 @@ router.post('/', auth, async (req, res) => {
       await genre.save();
       res.send(genre);
   }
-);
+));
 
 // Modify a genre.
 router.put('/:id', async (req, res) => {
