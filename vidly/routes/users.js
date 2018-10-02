@@ -6,7 +6,6 @@ const express = require('express');
 const router = express.Router();
 const { User, validate } = require('../models/user');
 
-
 // Get current user.
 // Because it's middleware, auth will run before we get
 // to async (req, res).
