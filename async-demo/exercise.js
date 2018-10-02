@@ -1,4 +1,4 @@
-
+// 
 getCustomer(1, (customer) => {
   console.log('Customer: ', customer);
   if (customer.isGold) {
