@@ -1,6 +1,7 @@
 const morgan = require('morgan');
 const helmet = require('helmet');
 const express = require('express');
+const winston = require('winston');
 const app = express();
 
 require('./startup/config')();
@@ -17,8 +18,9 @@ app.use(helmet());
 // } 
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening for vidly on port ${port}...`));
+const server = app.listen(port, () => winston.info(`Listening for vidly on port ${port}...`));
 
+module.exports = server;
 // async function createMovie(title, genre, numberInStock, dailyRentalRate){
 //   const movie = new Movie( {
 //     title: title,

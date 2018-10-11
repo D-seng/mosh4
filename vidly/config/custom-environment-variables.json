@@ -4,7 +4,8 @@
       "password": "app_password"
     },
   "db": {
-    "password": "db_password"
+    "dbpassword": "db_password",
+    "testpassword": "test_password"
   },
   "jwtPrivateKey": "vidly_jwtPrivateKey"
 
