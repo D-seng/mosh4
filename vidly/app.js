@@ -12,39 +12,18 @@ require('./startup/validation')();
 
 app.use(helmet());
 
+
 // if (app.get('env') === 'development') {
 //   app.use(morgan('tiny'));
 //   startupDebugger('Morgan enabled...');
 // } 
 
-const port = process.env.PORT || 3000;
-const server = app.listen(port, () => winston.info(`Listening for vidly on port ${port}...`));
-
+// if (!module.parent) {
+  // console.log("Port: " + process.env.PORT);
+// if (process.env.NODE_ENV !== 'test') {
+  const port = process.env.PORT || 3000;
+  const server = app.listen(port, () => winston.info(`Listening for vidly on port ${port}...`));
+// }
+  // const server = app.listen(3000);
+// }
 module.exports = server;
-// async function createMovie(title, genre, numberInStock, dailyRentalRate){
-//   const movie = new Movie( {
-//     title: title,
-//     genre: genre,
-//     numberInStock: numberInStock,
-//     dailyRentalRate: dailyRentalRate
-//   });
-//   const result = await movie.save();
-//   console.log(result);
-// }
-
-// async function createRental(customerId, movieId) {
-//   const rental = new Rental( {
-//     customer: customerId,
-//     movie: movieId
-//   });
-//   const result = await rental.save();
-//   console.log(result);
-
-  // Next: return the names of the customer and title, etc., of the movie.
-// }
-
-// createRental('5b9d64be992bee1c7b5e6331', '5b9eece320ca0a2332ac194a');
-
-
-// createMovie('Rocky', new Genre({ name: 'Drama' }) , 5, 4)
-

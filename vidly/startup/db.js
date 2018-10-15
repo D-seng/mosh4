@@ -9,11 +9,12 @@ module.exports = function () {
   console.log(mode);
   if (mode === 'test') {
     let pword = config.get('db.testpassword');
-    console.log('Password is: ' + pword);
+    console.log('Password is: ' + pword + ' DON\'T DO THIS IN REAL LIFE!');
     db = 'mongodb://darren-user:' + pword + '@ds129233.mlab.com:29233/vidly_tests';
+    
   } else {
     let pword = config.get('db.dbpassword');
-    console.log('Password is: ' + pword);
+    console.log('Password is: ' + pword + ' DON\'T DO THIS IN REAL LIFE!');
     db = 'mongodb://darren-user:' + pword + '@ds023684.mlab.com:23684/vidly'
   }
   //'mongodb://darren-user:' + pword + '@ds023684.mlab.com:23684/vidly'

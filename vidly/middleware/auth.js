@@ -6,9 +6,9 @@ function auth (req, res, next) {
   if (!token) return res.status(401).send('Access denied. No token provided.')
 
   try {
-    // jwtPrivateKey is the key for decoding the token. It is stored in an environment variable.
     const decodedPayload = jwt.verify(token, config.get('jwtPrivateKey'));
-    console.log(decodedPayload);
+  
+    
     req.user = decodedPayload;
     next();
   }

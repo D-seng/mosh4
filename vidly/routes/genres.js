@@ -1,9 +1,11 @@
+const validateObjectId = require('../middleware/validateObjectId');
 const asyncMiddleware = require('../middleware/asyncMiddleware');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
 const express = require('express');
 const router = express.Router();
 const { Genre, validate } = require('../models/genre');
+const mongoose = require('mongoose');
 
 //To render html, see Express - Advanced Topics, Lesson 9. It uses Pug as an example, but see how to use Vue.
 // List all genres.
@@ -16,15 +18,15 @@ router.get('/', asyncMiddleware(async (req, res) => {
 
 // Add a genre.
 // Second argument is optional middleware.
-router.post('/', auth, (async (req, res) => {
+router.post('/', auth, async (req, res) => {
   const { error } = validate(req.body);
-
-  if (error) return res.status(404).send(error.details[0].message);
+  if (error) return res.status(400).send(error.details[0].message);
+  
   const genre = new Genre ({ name: req.body.name });
       await genre.save();
       res.send(genre);
   }
-));
+);
 
 // Modify a genre.
 router.put('/:id', async (req, res) => {
@@ -46,9 +48,11 @@ router.delete('/:id', auth, async (req, res) => {
   res.send(genre);
 })
 
-router.get('/:id', [auth, admin], async (req, res) => {
+//[auth, admin],
+router.get('/:id', validateObjectId, async (req, res) => {
+
   const genre = await Genre.findById(req.params.id);
-  if (!genre) return res.status(400).send('Genre not found');
+  if (!genre) return res.status(404).send('Genre not found');
   res.send(genre);
 })
 
