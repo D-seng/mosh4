@@ -94,7 +94,37 @@ describe('/api/genres', () => {
       expect(res.body).toHaveProperty('_id');
       expect(res.body).toHaveProperty('name', name);
     });
-    
+  });
 
+  describe('DELETE /:id', () => {
+    let token;
+    let id;
+      
+    beforeEach(() => {
+      token = new User().generateAuthToken();
+      id = mongoose.Types.ObjectId().toHexString();
+    });
+
+    const exec = () => {
+      return request(server)
+        .delete('/api/genres' + id)
+        .set('x-auth-token', token)
+        .send({ name: 'genre1' });
+    } 
+
+    it('should return 404 if the id is invalid', async () => {
+      let id = '1';
+      Genre.collection.insertOne({ name: 'genre1' });
+      const res = await exec();
+      expect(res.status).toBe(404);
+    });
+
+    it('should return 404 if the genre doesn\'t exist', async () => {
+      
+
+      Genre.collection.insertOne({ name: 'genre1' });
+      const res = await exec();
+      expect(res.status).toBe(404);
+    });
   });
 });
