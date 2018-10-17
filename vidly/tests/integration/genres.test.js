@@ -99,32 +99,46 @@ describe('/api/genres', () => {
   describe('DELETE /:id', () => {
     let token;
     let id;
+    let name;
+
+    //Paths:
+    // 1. Not logged in (auth)
+    // 2. Genre doesn't exist.
+    // 3. Delete genre.
+    // 4. Return genre
       
     beforeEach(() => {
       token = new User().generateAuthToken();
-      id = mongoose.Types.ObjectId().toHexString();
+      id = mongoose.Types.ObjectId();
     });
 
     const exec = () => {
       return request(server)
         .delete('/api/genres' + id)
-        .set('x-auth-token', token)
-        .send({ name: 'genre1' });
+        .set('x-auth-token', token);
+        // .send({ name: 'genre1' });
     } 
 
     it('should return 404 if the id is invalid', async () => {
-      let id = '1';
-      Genre.collection.insertOne({ name: 'genre1' });
+      Genre.collection.insertOne({ name: 'genre2' });
       const res = await exec();
       expect(res.status).toBe(404);
     });
 
-    it('should return 404 if the genre doesn\'t exist', async () => {
-      
-
-      Genre.collection.insertOne({ name: 'genre1' });
+    it('should delete the genre if a valid id is passed', async () => {
+      id = genre._id;
       const res = await exec();
-      expect(res.status).toBe(404);
+      expect(res.status).toBe(200);
+    });
+
+    it('should return the genre after it is deleted', async () => {
+      name = 'genre2';
+      const genre = await Genre.collection.insertOne({ name });
+      id = genre._id;
+      const res = await exec();
+      expect(id).toBe('a');
+      expect(res.body).toHaveProperty('_id');
+      expect(res.body).toHaveProperty('name', name);
     });
   });
 });
