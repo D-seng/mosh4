@@ -100,6 +100,7 @@ describe('/api/genres', () => {
     let token;
     let id;
     let name;
+    let genre;
 
     //Paths:
     // 1. Not logged in (auth)
@@ -107,17 +108,19 @@ describe('/api/genres', () => {
     // 3. Delete genre.
     // 4. Return genre
       
-    beforeEach(() => {
-      token = new User().generateAuthToken();
-      id = mongoose.Types.ObjectId();
-    });
-
     const exec = () => {
       return request(server)
         .delete('/api/genres' + id)
-        .set('x-auth-token', token);
-        // .send({ name: 'genre1' });
+        .set('x-auth-token', token)
+        .send();
     } 
+
+    beforeEach(async () => {
+      genre = new Genre({ name: 'genre1' });
+      await genre.save();
+      id = genre._id;
+      token = new User({ isAdmin: true }).generateAuthToken();
+    });
 
     it('should return 404 if the id is invalid', async () => {
       Genre.collection.insertOne({ name: 'genre2' });
@@ -126,9 +129,10 @@ describe('/api/genres', () => {
     });
 
     it('should delete the genre if a valid id is passed', async () => {
-      id = genre._id;
-      const res = await exec();
-      expect(res.status).toBe(200);
+      await exec();
+      const delId = await Genre.findById(id);
+      
+      expect(delId).toBeNull();
     });
 
     it('should return the genre after it is deleted', async () => {

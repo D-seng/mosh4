@@ -49,7 +49,6 @@ router.delete('/:id', [auth, admin], async (req, res) => {
 })
 
 
-
 //[auth, admin],
 router.get('/:id', validateObjectId, async (req, res) => {
 
