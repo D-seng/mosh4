@@ -15,12 +15,14 @@ router.post('/', auth, async (req, res) => {
     'customer._id': req.body.customerId, 
     'movie._id': req.body.movieId });
 
-  if(!rental) {
+  if (!rental) {
     return res.status(404).send('This customer did not rent this movie.');
   }
-  if (rental.dateReturned) {
-    return res.status(400).send('Rental already processed.');
-  }
+  console.log(rental.dateReturned);
+  if (rental.dateReturned !== null) {
+     return res.status(400).send('Rental already processed.');
+   }
+  // /return res.status(400).send('Rental already returned.')
 });
 
 module.exports = router;

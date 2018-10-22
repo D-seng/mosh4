@@ -69,10 +69,14 @@ describe('api/returns', () => {
   });
 
   it('should return 400 if rental is already processed', async () => {
-    const rental = Rental.findOne();
-    rental.dateReturned = Date.now();
+    const rental = await Rental.findOne();
+    // expect(rental).toBe(1);
+    // rental.set('dateReturned', Date.now());
+    // expect(rental.dateReturned).toBe(1);
     const res = await exec();
+
     expect(res.status).toBe(400);
+
   });
 
 });
