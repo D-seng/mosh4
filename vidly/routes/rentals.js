@@ -5,6 +5,8 @@ const { Customer } = require('../models/customer');
 const { Movie } = require('../models/movie');
 const { Rental, validate } = require('../models/rental');
 const Fawn = require('fawn');
+const auth = require('../middleware/auth')
+
 
 Fawn.init(mongoose);
   // To render html, see Express - Advanced Topics, Lesson 9. It uses Pug as an example, but see how to use Vue.
@@ -68,6 +70,7 @@ try {
   res.send(rental);
 }
 );
+
 
 // Modify a rental.
 router.put('/:id', async (req, res) => {

@@ -5,6 +5,7 @@ const express = require('express');
 // const mongoose = require('mongoose');
 const router = express.Router();
 const { User, validate } = require('../models/user');
+const validateObjectId = require('../middleware/validateObjectId');
 
 // Get current user.
 // Because it's middleware, auth will run before we get
@@ -16,8 +17,15 @@ router.get('/me', async (req, res) => {
   res.send(user);
 });
 
+router.get('/:id', [validateObjectId, auth], async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (!user) return res.status(404).send('User not found');
+  res.send(user);
+});
+
 // Add a user.
 router.post('/', async (req, res) => {
+  console.log('post');
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -33,6 +41,7 @@ router.post('/', async (req, res) => {
   await user.save();
  
   const token = user.generateAuthToken();
+
   res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email']));
 });
 

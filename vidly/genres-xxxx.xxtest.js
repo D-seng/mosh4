@@ -1,12 +1,12 @@
 const request = require('supertest');
-const {Genre} = require('../../models/genre');
-const { User} = require('../../models/user');
+const {Genre} = require('./models/genre');
+const { User} = require('./models/user');
 const mongoose = require('mongoose');
 let server;
 
 describe('/api/genres', () => {
   beforeEach(() => { 
-      server = require('../../app'); 
+      server = require('./app'); 
    });
   afterEach(async () => { 
     server.close();
@@ -108,8 +108,8 @@ describe('/api/genres', () => {
     // 3. Delete genre.
     // 4. Return genre
       
-    const exec = () => {
-      return request(server)
+    const exec = async () => {
+      return await request(server)
         .delete('/api/genres' + id)
         .set('x-auth-token', token)
         .send();
@@ -129,10 +129,11 @@ describe('/api/genres', () => {
     });
 
     it('should delete the genre if a valid id is passed', async () => {
-      await exec();
-      const delId = await Genre.findById(id);
-      
-      expect(delId).toBeNull();
+      // expect(token).toBe(1);
+      exec();
+      const delGenre = await Genre.findById(id);
+      expect(id).toBe(id);
+      expect(delGenre).toBeNull();
     });
 
     it('should return the genre after it is deleted', async () => {
