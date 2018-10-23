@@ -69,14 +69,33 @@ describe('api/returns', () => {
   });
 
   it('should return 400 if rental is already processed', async () => {
-    const rental = await Rental.findOne();
-    // expect(rental).toBe(1);
-    // rental.set('dateReturned', Date.now());
-    // expect(rental.dateReturned).toBe(1);
+    rental.dateReturned = Date.now();
+    await rental.save();
     const res = await exec();
-
     expect(res.status).toBe(400);
+  });
 
+  it('should return 200 if valid request', async () => {
+    const res = await exec();
+    expect(res.status).toBe(200);
+  });
+
+  it('should set the return date if input is valid', async () => {
+    rental.dateCheckedOut = Date.now();
+    await exec();
+    const rentalInDb = await Rental.findById(rental._id);
+    const diff = Date.now() - rentalInDb.dateReturned;
+    expect(diff).toBeLessThan(5000);
+  });
+
+  it('should calculate the rental fee', async () => {
+    rental.dateCheckedOut = new Date(2018, 1, 1);
+
+    await exec();
+    const rentalInDb = await Rental.findById(rental._id);
+    // expect(rentalInDb.movie.dailyRentalRate).toBe(15);
+    expect(rentalInDb.rentalFee).toBeGreaterThanOrEqual(1000000); 
+    // expect(rentalInDb.rentalFee).toBeGreaterThanOrEqual(rentalInDb.movie.dailyRentalRate);
   });
 
 });
