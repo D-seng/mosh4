@@ -4,6 +4,7 @@ const { Rental } = require('../../models/rental');
 const { User } = require('../../models/user');
 const { Movie } = require('../../models/movie');
 const mongoose = require('mongoose');
+const moment = require('moment');
 
 describe('api/returns', () => {
   let server;
@@ -12,13 +13,6 @@ describe('api/returns', () => {
   let rental;
   let token;
   let payload;
-
-  const exec = () => {
-    return request(server)
-      .post('/api/returns')
-      .set('x-auth-token', token)
-      .send({ customerId, movieId });
-  };
 
   beforeEach(async () => {
     server = require('../../app');
@@ -43,6 +37,13 @@ describe('api/returns', () => {
     server.close();
     await Rental.remove({});
   });
+
+  const exec = () => {
+    return request(server)
+      .post('/api/returns')
+      .set('x-auth-token', token)
+      .send({ customerId, movieId });
+  };
   
   it('should return 401 if client is not logged in', async () => {
     token = '';
@@ -82,6 +83,7 @@ describe('api/returns', () => {
 
   it('should set the return date if input is valid', async () => {
     rental.dateCheckedOut = Date.now();
+    await rental.save();
     await exec();
     const rentalInDb = await Rental.findById(rental._id);
     const diff = Date.now() - rentalInDb.dateReturned;
@@ -89,13 +91,11 @@ describe('api/returns', () => {
   });
 
   it('should calculate the rental fee', async () => {
-    rental.dateCheckedOut = new Date(2018, 1, 1);
-
+    rental.dateCheckedOut = moment().add(-7, 'days').toDate();
+    await rental.save();
     await exec();
     const rentalInDb = await Rental.findById(rental._id);
-    // expect(rentalInDb.movie.dailyRentalRate).toBe(15);
-    expect(rentalInDb.rentalFee).toBeGreaterThanOrEqual(1000000); 
-    // expect(rentalInDb.rentalFee).toBeGreaterThanOrEqual(rentalInDb.movie.dailyRentalRate);
+    expect(rentalInDb.rentalFee).toBe(14);
   });
 
 });
