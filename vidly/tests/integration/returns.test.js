@@ -1,6 +1,5 @@
 const request = require('supertest');
 const { Rental } = require('../../models/rental');
-
 const { User } = require('../../models/user');
 const { Movie } = require('../../models/movie');
 const mongoose = require('mongoose');
@@ -12,13 +11,22 @@ describe('api/returns', () => {
   let movieId;
   let rental;
   let token;
-  let payload;
+  let movie;
 
   beforeEach(async () => {
     server = require('../../app');
     customerId = mongoose.Types.ObjectId();
     movieId = mongoose.Types.ObjectId();
     token = new User().generateAuthToken();
+
+    movie = new Movie ({
+      _id: movieId,
+        title: '12345',
+        numberInStock: 1,
+        dailyRentalRate: 2,
+        genre: { name: '12345'}
+    });
+    await movie.save();
 
      rental = new Rental({ 
       customer: {
@@ -28,13 +36,16 @@ describe('api/returns', () => {
       movie: {
         _id: movieId,
         title: '12345',
-        dailyRentalRate: 2
+        numberInStock: 6,
+        dailyRentalRate: 2        
       }
     });
       await rental.save();
+
   });
+
   afterEach(async () => {
-    server.close();
+    await server.close();
     await Rental.remove({});
   });
 
@@ -98,4 +109,9 @@ describe('api/returns', () => {
     expect(rentalInDb.rentalFee).toBe(14);
   });
 
+  it('should increment the movie by one upon successful return', async () => {
+    await exec();
+    const movieInDb = await Movie.findById(movieId);
+    expect(movieInDb.numberInStock).toBe(movie.numberInStock);
+  });
 });
