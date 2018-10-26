@@ -47,6 +47,7 @@ describe('api/returns', () => {
   afterEach(async () => {
     await server.close();
     await Rental.remove({});
+    await Movie.remove({});
   });
 
   const exec = () => {
@@ -112,6 +113,29 @@ describe('api/returns', () => {
   it('should increment the movie by one upon successful return', async () => {
     await exec();
     const movieInDb = await Movie.findById(movieId);
-    expect(movieInDb.numberInStock).toBe(movie.numberInStock);
+    expect(movieInDb.numberInStock).toBe(movie.numberInStock + 1);
   });
+
+  it('should return a summary of the rental in the body of the response', async () => {
+    const res = await exec();
+    const rentalInDb = await Rental.findById(rental._id);
+    // Too specific b/c res returns a json object, which stores data
+    // in strings:
+    // expect(res.body).toMatchObject(rentalInDb);
+
+    // This works, but is wordy:
+    // expect(res.body).toHaveProperty('dateCheckedOut');
+    // expect(res.body).toHaveProperty('dateReturned');
+    // expect(res.body).toHaveProperty('rentalFee');
+    // expect(res.body).toHaveProperty('movie.dailyRentalRate'); needed?
+    // expect(res.body).toHaveProperty('customer');
+    // expect(res.body).toHaveProperty('movie');
+    
+    // Better:
+    expect(Object.keys(res.body)).toEqual(
+      expect.arrayContaining(['dateCheckedOut', 'dateReturned', 
+      'rentalFee', 'movie', 'customer']))
+  });
+
+ 
 });
