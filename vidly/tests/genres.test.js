@@ -93,12 +93,16 @@ describe('/api/genres', () => {
       expect(res.status).toBe(404);
     });
 
-    it('should return genre if genre found', async () => {
+    it('should update genre if genre found', async () => {
       await exec();
       const updatedGenre = await Genre.findById(genre._id);
       expect(updatedGenre.name).toBe(newName);
-      // const res = await exec();
-      // expect(res).toHaveProperty('name', newName);
+    });
+
+    it('should return genre if it\'s a valid request', async () => {
+      const res = await exec();
+      expect(res.body).toHaveProperty('name', newName);
+      // expect(res.body).toHaveProperty('name', 'genre66');
     });
   });
 
