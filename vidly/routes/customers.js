@@ -2,10 +2,14 @@ const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
 const { Customer, validate } = require('../models/customer');
+const auth = require('../middleware/auth');
 
 //To render html, see Express - Advanced Topics, Lesson 9. It uses Pug as an example, but see how to use Vue.
 // List all customers.
 router.get('/', async (req, res) => {
+  const token = req.header('x-auth-token');
+  if (!token) return res.status(401).send('Access denied. No token provided.')
+
   const customers = await Customer.find().sort('name');
   res.send(customers);
 });
