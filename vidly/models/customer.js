@@ -11,8 +11,8 @@ const customerSchema = new mongoose.Schema({
   phone: {
     type: String,
     required: true,
-    minlength: 5,
-    maxlength: 50
+    minlength: 9,
+    maxlength: 9
   },
   isGold: {
     type: Boolean,
