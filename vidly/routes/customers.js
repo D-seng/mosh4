@@ -15,6 +15,12 @@ router.get('/', auth, async (req, res) => {
   res.send(customers);
 });
 
+router.get('/:id', async (req, res) => {
+  const customer = await Customer.findById(req.params.id);
+  if (!customer) return res.status(400).send('Customer not found');
+  res.send(customer);
+})
+
 // Add a customer.
 router.post('/', async (req, res) => {
   const { error } = validate(req.body);
@@ -47,10 +53,5 @@ router.delete('/:id', async (req, res) => {
   res.send(customer);
 })
 
-router.get('/:id', async (req, res) => {
-  const customer = await Customer.findById(req.params.id);
-  if (!customer) return res.status(400).send('Customer not found');
-  res.send(customer);
-})
 
 module.exports = router;
