@@ -74,21 +74,16 @@ describe('/api/genres', () => {
         .send({ name: newName });
     } 
 
+
     it('should return a 401 error if user not logged in', async () => {
       token = '';
       const res = await exec();
       expect(res.status).toBe(401);
     });
 
-    it('should return a 404 error if genre not found', async () => {
-      id = 1;
-      const res = await request(server).get('/api/genres/' + id);
-      expect(res.status).toBe(404);
-    });
-
     it('should return a 404 error if no genre with given id exists', async () => {
       id = mongoose.Types.ObjectId();
-      const res = await request(server).get('/api/genres/' + id);
+      const res = await exec();
       expect(res.status).toBe(404);
     });
 
@@ -177,20 +172,35 @@ describe('/api/genres', () => {
         .set('x-auth-token', token)
         .send();
     } 
-
-    it('should return 404 if the id is invalid', async () => {
-      id = '';
-      const res = await exec();     
+    it('should return 401 if user is not logged in', async () => {
+      token = '';
+      const res = await exec();
+      expect(res.status).toBe(401);
+    })
+    it('should return a 404 error if no genre with given id exists', async () => {
+      id = mongoose.Types.ObjectId();
+      const res = await exec();
       expect(res.status).toBe(404);
+      expect(res.text).toBe('Genre not found');
+    });
+
+    it('should return a 403 error if the user doens\'t have admin privileges', async () => {
+      user = new User({ name: 'abcde', email: 'abcdefg', password: 'foobar', isAdmin: false })
+      token = user.generateAuthToken();
+      const res = await exec();
+      expect(res.status).toBe(403);
     });
 
     it('should delete the genre if a valid id is passed', async () => {
        await exec();
+
       const delGenre = await Genre.findById(id);
       expect(delGenre).toBeNull();
     });
 
+
     it('should return the genre after it is deleted', async () => {
+      // expect(exec).toBe('a');
       const res = await exec();
       expect(res.body).toHaveProperty('_id');
       expect(res.body).toHaveProperty('name', 'genre1');

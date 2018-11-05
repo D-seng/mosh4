@@ -8,14 +8,16 @@ module.exports = function () {
   const mode = process.env.NODE_ENV;
   console.log(mode);
   if (mode === 'test') {
-    let pword = config.get('db.testpassword');
-    console.log('Password is: ' + pword + ' DON\'T DO THIS IN REAL LIFE!');
-    db = 'mongodb://darren-user:' + pword + '@ds129233.mlab.com:29233/vidly_tests';
-    
+    // 'mongodb://localhost/playground', { useNewUrlParser: true }
+    // let pword = config.get('db.testpassword');
+    // console.log('Password is: ' + pword + ' DON\'T DO THIS IN REAL LIFE!');
+    // db = 'mongodb://darren-user:' + pword + '@ds129233.mlab.com:29233/vidly_tests';
+    db = 'mongodb://localhost/vidly_test';
   } else {
-    let pword = config.get('db.dbpassword');
-    console.log('Password is: ' + pword + ' DON\'T DO THIS IN REAL LIFE!');
-    db = 'mongodb://darren-user:' + pword + '@ds023684.mlab.com:23684/vidly'
+    // let pword = config.get('db.dbpassword');
+    // console.log('Password is: ' + pword + ' DON\'T DO THIS IN REAL LIFE!');
+    // db = 'mongodb://darren-user:' + pword + '@ds023684.mlab.com:23684/vidly'
+    db = 'mongodb://localhost/vidly';
   }
   //'mongodb://darren-user:' + pword + '@ds023684.mlab.com:23684/vidly'
 

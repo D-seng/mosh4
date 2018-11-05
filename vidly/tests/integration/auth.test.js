@@ -20,9 +20,14 @@ describe('auth middleware', () => {
   });
 
   it('should return 401 if no token is provided', async () => {
-    // jest.setTimeout(30000);
     token = '';
     const res = await exec();
     expect(res.status).toBe(401);
   }); 
+
+  it('should return 400 if invalid token is provided', async () => {
+    token = 'invalid token';
+    const res = await exec();
+    expect(res.status).toBe(400);
+  })
 });
