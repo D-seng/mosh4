@@ -1,28 +1,33 @@
 const {User} = require('../../models/user');
 const request = require('supertest');
 
-describe('auth middleware', () => {
+describe('/api/logins POST /', () => {
+  let email;
+  let password;
+  let token;
+
   beforeEach(() => { 
     server = require('../../app');
+    email = 'foobar@baz.com'
+    password = 'foobar';
+    token = User().generateAuthToken();
   });
-  afterEach(async () => { server.close(); });
   
-  let token;
+  afterEach(async () => { 
+    await server.close(); 
+  });
+  
   const exec = () => {
     return request(server)
-      .post('/api/genres')
+      .post('/api/logins')
       .set('x-auth-token', token)
-      .send({ name: 'genre1' });
+      .send({ email, password });
   }
 
-  beforeEach(() => {
-    token = new User().generateAuthToken();
-  });
-
-  it('should return 401 if no token is provided', async () => {
-    token = '';
+  it('should return 400 if email is missing or invalid', async () => {
+    email = 'aaa';
     const res = await exec();
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(400);
   }); 
 
   it('should return 400 if invalid token is provided', async () => {
