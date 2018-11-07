@@ -20,7 +20,6 @@ describe('/api/logins POST /', () => {
   const exec = () => {
     return request(server)
       .post('/api/logins')
-      .set('x-auth-token', token)
       .send({ email, password });
   }
 
@@ -30,8 +29,8 @@ describe('/api/logins POST /', () => {
     expect(res.status).toBe(400);
   }); 
 
-  it('should return 400 if invalid token is provided', async () => {
-    token = 'invalid token';
+  it('should return 400 if invalid password is provided', async () => {
+    password = '';
     const res = await exec();
     expect(res.status).toBe(400);
   })
