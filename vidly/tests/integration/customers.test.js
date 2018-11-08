@@ -15,6 +15,7 @@ describe('api/customers', () => {
     server = require('../../app');
     user = new User({name: 'abcde', email: 'abcdefg', password: 'foobar', isAdmin: true})
     token = user.generateAuthToken();
+    user.save();
   });
   afterEach(async () => {
     await server.close();
