@@ -2,6 +2,7 @@ const auth = require('../middleware/auth');
 const bcrypt = require('bcryptjs');
 const _ = require('lodash');
 const express = require('express');
+const winston = require('winston');
 // const mongoose = require('mongoose');
 const router = express.Router();
 const { User, validate } = require('../models/user');
@@ -30,8 +31,8 @@ router.post('/', async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   const salt = await bcrypt.genSalt(11);
-  req.body.password = await bcrypt.hash(req.body.password, salt);
-  
+  req.body.password = await bcrypt.hashSync(req.body.password, salt);
+  winston.info(req.body.password);
   let user = await User.findOne({ email: req.body.email})
 
   if (user) return res.status(400).send('User already exists.')

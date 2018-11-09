@@ -4,16 +4,23 @@ const request = require('supertest');
 describe('/api/logins POST /', () => {
   let email;
   let password;
-  let user;
+  let isAdmin;
+  let user2;
   let name;
 
   beforeEach(async() => { 
     server = require('../../app');
-    email = 'foobar@baz.com';
-    password = 'foobar';
-    name = 'abcdefg';
-    user = new User({ name: name, email: email, password: password, isAdmin: false })
+    email = 'right@rightemail.com';
+    password = 'rightpassword';
+    name = 'rightname';
+    isAdmin = true;
+    // User.collection.insertOne(
+    //   { name: name, email: email, password: password }
+    // );
+
+    user = new User({ name, email, password, isAdmin })
     await user.save(); 
+
   });
   
   afterEach(async () => { 
@@ -40,8 +47,14 @@ describe('/api/logins POST /', () => {
   });
 
   it('should return 401 if valid but incorrect email is provided', async () => {
+    email = 'wrong@wrongemail.com';
     const res = await exec();
-    expect(res).toBe(1);
+    expect(res.status).toBe(401);
+  });
+
+  it('should return 401 if valid but incorrect password is provided', async () => {
+    password = 'wrongpassword';
+    const res = await exec();
     expect(res.status).toBe(401);
   });
 
