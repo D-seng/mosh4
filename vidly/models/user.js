@@ -59,7 +59,7 @@ function validateUser(user) {
     email: Joi.string().email({ minDomainAtoms: 2 }).required(),
     password: Joi.string().min(5).max(100).required()
   };
-  console.log(userSchema.password);
+  // console.log(userSchema.password);
   return Joi.validate(user, schema);
   // console.log(userSchema.password);
   // return Joi.validate(userSchema.password, new PasswordComplexity(complexityOptions), (err, value) => {

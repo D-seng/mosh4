@@ -1,5 +1,5 @@
 const auth = require('../middleware/auth');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const _ = require('lodash');
 const express = require('express');
 const winston = require('winston');
@@ -24,21 +24,25 @@ router.get('/:id', [validateObjectId, auth], async (req, res) => {
   res.send(user);
 });
 
+  // const salt = await bcrypt.genSalt(10);
+  // const hashed = await bcrypt.hash('1234', salt)
 // Add a user.
 router.post('/', async (req, res) => {
   console.log('post');
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const salt = await bcrypt.genSalt(11);
-  req.body.password = await bcrypt.hashSync(req.body.password, salt);
-  winston.info(req.body.password);
+  
+
+  // winston.info(req.body.password);
   let user = await User.findOne({ email: req.body.email})
+
 
   if (user) return res.status(400).send('User already exists.')
 
   user = new User(_.pick(req.body, ['name', 'email', 'password']));
-  
+  const salt = await bcrypt.genSalt(10);
+  req.body.password = await bcrypt.hash(req.body.password, salt);
   await user.save();
  
   const token = user.generateAuthToken();

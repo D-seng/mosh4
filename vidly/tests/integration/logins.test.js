@@ -1,12 +1,14 @@
 const {User} = require('../../models/user');
 const request = require('supertest');
+const bcrypt = require('bcrypt');
 
 describe('/api/logins POST /', () => {
   let email;
   let password;
   let isAdmin;
-  let user2;
+  let user;
   let name;
+  let hashed;
 
   beforeEach(async() => { 
     server = require('../../app');
@@ -14,12 +16,12 @@ describe('/api/logins POST /', () => {
     password = 'rightpassword';
     name = 'rightname';
     isAdmin = true;
-    // User.collection.insertOne(
-    //   { name: name, email: email, password: password }
-    // );
 
-    user = new User({ name, email, password, isAdmin })
-    await user.save(); 
+    const salt = await bcrypt.genSalt(10);
+    hashed = await bcrypt.hash(password, salt);
+    
+    user = new User({ name, email, password: hashed, isAdmin })
+    await user.save();
 
   });
   
@@ -56,6 +58,19 @@ describe('/api/logins POST /', () => {
     password = 'wrongpassword';
     const res = await exec();
     expect(res.status).toBe(401);
+  });
+
+  it('should return 200 if valid email and password provided', async () => {
+    const res = await exec();
+    expect(res.status).toBe(200);
+  });
+
+  it('should return user if valid email and password provided', async () => {
+    const res = await exec();
+    expect(res.body).toHaveProperty('name', name);
+    expect(res.body).toHaveProperty('password', hashed);
+    expect(res.body).toHaveProperty('email', email);
+    expect(res.body).toHaveProperty('_id');
   });
 
 });

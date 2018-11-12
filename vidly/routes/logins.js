@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const _ = require('lodash');
 const express = require('express');
 // const mongoose = require('mongoose');
@@ -13,8 +13,12 @@ router.post('/', async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) return res.status(401).send('Invalid email or password.');
 
-  const validPassword = bcrypt.compare(req.body.password, user.password);
+  const validPassword = await bcrypt.compare(req.body.password, user.password);
+  // return res.send([validPassword, req.body.password, user.password]);
+
   if (!validPassword) return res.status(401).send('Invalid email or password.');
+
+  //********* */
   res.send(user);
 });
 
