@@ -11,7 +11,7 @@ const auth = require('../middleware/auth')
 Fawn.init(mongoose);
   // To render html, see Express - Advanced Topics, Lesson 9. It uses Pug as an example, but see how to use Vue.
     // List all rentals.
-  router.get('/', async (req, res) => {
+  router.get('/', auth, async (req, res) => {
       const rentals = await Rental.find().sort('-dateCheckedOut');
       res.send(rentals);
     });
