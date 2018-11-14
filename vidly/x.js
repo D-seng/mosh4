@@ -31,3 +31,52 @@
 
 //passed
 //{"catch": [Function catch], "error": [ValidationError: "$__" is not allowed. "isNew" is not allowed. "errors" is not allowed. "_doc" is not allowed], "then": [Function then], "value": {"_id": "5be84f6443d66ca482321095", "email": "valid@validemail.com", "isAdmin": false, "name": "aaaaa", "password": "aaaaa"}}
+
+  // const customerSchema = new mongoose.Schema({
+  //   name: {
+  //     type: String,
+  //     required: true,
+  //     minlength: 5,
+  //     maxlength: 50
+  //   },
+  //   isGold: {
+  //     type: Boolean,
+  //     default: false
+  //   },
+  //   phone: {
+  //     type: String,
+  //     required: true
+  //   }
+  // });
+
+  // const movieSchema = new mongoose.Schema({
+  //   title: {
+  //     type: String,
+  //     required: true,
+  //     trim: true,
+  //     minlength: 5,
+  //     maxlength: 255
+  //   },
+  //   dailyRentalRate: {
+  //     type: Number,
+  //     required: true,
+  //     min: 0,
+  //     max: 50
+  //   }
+  // });
+
+  // const rentalSchema = new mongoose.Schema({
+  //   customer: customerSchema,
+  //   movie: movieSchema,
+  //   dateCheckedOut: {
+  //     type: Date,
+  //     required: true,
+  //     default: Date.now()
+  //   },
+  //   dateReturned: Date,
+  //   rentalFee: {
+  //     type: Number,
+  //     min: 0,
+  //     max: 50
+  //   }
+  // });

@@ -20,8 +20,8 @@ describe('validateRental', () => {
     //make movie and customer schemas insead of instances.
     // movie = new Movie( {title: 'aaaaa', 
     //   genre: { _id: genre._id, name: genre.name},
-    numberInStock: 1,
-    dailyRentalRate: 1})
+    // numberInStock: 1,
+    // dailyRentalRate: 1})
 
     });
 
@@ -31,7 +31,7 @@ describe('validateRental', () => {
     // await Movie.remove({});
   });
 
-  it('should return joi-generated error if invalid customerId is passed', async () => {
+  it('should return joi-generated error if invalid customerId is passed', () => {
     
     // await rental.save();
 
@@ -41,5 +41,4 @@ describe('validateRental', () => {
     // expect(validated.error.toString()).toBe(1);
     // expect(validated.error.toString()).toMatch(/child/);
   });
-
 });

@@ -17,7 +17,8 @@ Fawn.init(mongoose);
     });
 
 // Add a rental.
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
+
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -26,7 +27,7 @@ router.post('/', async (req, res) => {
   
   const movie = await Movie.findById(req.body.movieId);
   // console.log(req.body.movieId);
-  if (!movie) return res.status(400).send('Invalid movie.');
+  if (!movie) return res.status(401).send('Invalid movie.');
 
   if (movie.numberInStock === 0) return res.status(400).send('Movie not in stock.');
 
