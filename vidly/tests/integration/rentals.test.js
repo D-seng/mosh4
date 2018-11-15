@@ -12,72 +12,32 @@ let rental;
 let customer;
 let movie;
 let genre;
-let customer2;
-let movie2;
 let movieId;
 let customerId;
-let genreId;
 
   beforeEach(async () => {
-    server = require('../../app');    
-  });
+    server = require('../../app');
+    movieId = mongoose.Types.ObjectId();
+    customerId = mongoose.Types.ObjectId();
+    token = new User().generateAuthToken();
 
-  afterEach(async () => {
-    await server.close();
-  });
+    genre = new Genre({ name: '12345' })
+    await genre.save()
 
-  describe('GET /', async () => {
-
-    beforeEach(async() => {
-      token = new User().generateAuthToken();
-    });
-
-    afterEach(async() => {
-      // await Customer.remove({});
-      // await Movie.remove({});
-      // await Rental.remove({});
-    })
-
-    const exec = () => {
-      return request(server)
-        .get('/api/rentals')
-        .set('x-auth-token', token)
-    };
-
-    it('should return 401 if no valid token is provided', async () =>{
-      token = '';
-      const res = await exec();
-      expect(res.status).toBe(401);
-    });
-  });
-
-  describe('POST /', async () => {
-
-    beforeEach(async() => {
-      movieId = mongoose.Types.ObjectId();
-      customerId = mongoose.Types.ObjectId();
-
-      token = new User().generateAuthToken();
-
-      genre = new Genre({ name: '12345' })
-
-      await genre.save()
-    
-      movie = new Movie({
+    movie = new Movie({
       _id: movieId,
       title: '12345',
       numberInStock: 1,
       dailyRentalRate: 2,
       genre: { name: genre.name }
     });
-
     await movie.save();
 
-    customer = new Customer({ 
+    customer = new Customer({
       _id: customerId,
-      name: 'abcde', 
-      phone: '123456789' });
-
+      name: 'abcde',
+      phone: '123456789'
+    });
     await customer.save();
 
     rental = new Rental({
@@ -93,17 +53,34 @@ let genreId;
         dailyRentalRate: 2
       }
     });
-
     await rental.save();
 
-    });
+  });
 
-    afterEach(async () => {
-      await Movie.remove({});
-      await Customer.remove({});
-      await Rental.remove({});
-      await Genre.remove({});    
+  afterEach(async () => {
+    await Customer.remove({});
+    await Movie.remove({});
+    await Rental.remove({});
+    await Genre.remove({});
+    await server.close();
+  });
+
+  describe('GET /', async () => {
+//add another rental for the testing of GET.
+    const exec = () => {
+      return request(server)
+        .get('/api/rentals')
+        .set('x-auth-token', token)
+    };
+
+    it('should return 401 if no valid token is provided', async () =>{
+      token = '';
+      const res = await exec();
+      expect(res.status).toBe(401);
     });
+  });
+
+  describe('POST /', async () => {
 
     const exec = () => {
       return request(server)
@@ -130,13 +107,33 @@ let genreId;
       expect(res.status).toBe(400);
     });
 
-    it('should return 404 if valid but non-existent movie is provided', async () => {
-      // movieId = mongoose.Types.ObjectId();
+    it('should return 404 if valid but non-existent movieId is provided', async () => {
+      movieId = mongoose.Types.ObjectId();
       // expect(movieId).toBe(1);
       const res = await exec();
-      expect(res).toBe(400);
+      expect(res.status).toBe(404);
+    });
+
+    it('should return 404 if valid but non-existent customerId is provided', async () => {
+      customerId = mongoose.Types.ObjectId();
+      // expect(movieId).toBe(1);
+      const res = await exec();
+      expect(res.status).toBe(404);
     });
 
   });
+
+  describe('DELETE /:id', () => {
+    let rentalId;
+    const exec = () => {
+      request(server)
+      .delete('/api/rentals/' + rentalId)
+      .set('x-auth-token', token)
+      .send(rental)
+    };
+    it('should return 400 if invalid rentalId is provided', () => {
+      rentalId = '';
+    })
+  })
  
 });

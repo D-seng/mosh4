@@ -27,12 +27,12 @@ router.post('/', auth, async (req, res) => {
   
   const movie = await Movie.findById(req.body.movieId);
   // console.log(req.body.movieId);
-  if (!movie) return res.status(401).send('Invalid movie.');
+  if (!movie) return res.status(404).send('Movie not found.');
 
   if (movie.numberInStock === 0) return res.status(400).send('Movie not in stock.');
 
   const customer = await Customer.findById(req.body.customerId);
-  if (!customer) return res.status(400).send('Invalid customer.');
+  if (!customer) return res.status(404).send('Invalid customer.');
 
   // Use only two properties of the embedded genre object because it could have other properties
   // and because it will definitely have a version id (which we don't want)
@@ -72,7 +72,6 @@ try {
 }
 );
 
-
 // Modify a rental.
 router.put('/:id', async (req, res) => {
   const { error } = validate(req.body);
@@ -87,14 +86,15 @@ router.put('/:id', async (req, res) => {
 
 // Delete a rental.
 router.delete('/:id', async (req, res) => {
-  const movie = await Genre.findByIdAndRemove(req.params.id);
-  if (!movie) return res.status(400).send('Movie not found');
+  const rental = await Rental.findByIdAndRemove(req.params.id);
+  if (!rental) return res.status(400).send('Rental not found');
   res.send(movie);
 })
 
+// Get a rental.
 router.get('/:id', async (req, res) => {
   const movie = await Movie.findById(req.params.id);
-  if (!movie) return res.status(400).send('Genre not found');
+  if (!movie) return res.status(400).send('Rental not found');
   res.send(movie);
 })
 

@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
 }
 );
 
-// Modify a genre.
+// Modify a movie.
 router.put('/:id', async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
@@ -46,7 +46,7 @@ router.put('/:id', async (req, res) => {
 
 });
 
-// Delete a genre.
+// Delete a movie.
 router.delete('/:id', async (req, res) => {
   const movie = await Genre.findByIdAndRemove(req.params.id);
   if (!movie) return res.status(400).send('Movie not found');
