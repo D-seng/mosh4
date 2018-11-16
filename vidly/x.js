@@ -1,3 +1,5 @@
+// Received: { "header": { "connection": "close", "content-length": "16", "content-type": "text/html; charset=utf-8", "date": "Fri, 16 Nov 2018 13:33:17 GMT", "etag": "W/\"10-tQxSR5G+SLlKraKYSPEkH884hww\"", "x-powered-by": "Express" }, "req": { "data": undefined, "headers": { "user-agent": "node-superagent/3.8.3", "x-auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmVlYzcxZDFiOGMxMTgyNzVlOTJlMDciLCJpYXQiOjE1NDIzNzUxOTd9.xwbo7veRjx4LL07ybBvUEJAeI_e7nQWWHF338V209t0" }, "method": "DELETE", "url": "http://127.0.0.1:54501/api/rentals/5beec71d1b8c118275e92e0f" }, "status": 400, "text": "Rental not found" }
+
 // POST /api/returns {customerId, movieId}
 // It should return 401 if user is not logged in.
 // It should return 400 if the customerId is not found.

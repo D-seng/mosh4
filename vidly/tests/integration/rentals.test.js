@@ -67,6 +67,7 @@ let customerId;
 
   describe('GET /', async () => {
 //add another rental for the testing of GET.
+
     const exec = () => {
       return request(server)
         .get('/api/rentals')
@@ -124,16 +125,32 @@ let customerId;
   });
 
   describe('DELETE /:id', () => {
-    let rentalId;
+
+    beforeEach(() => {
+      rentalId = rental._id;
+    });
+
     const exec = () => {
-      request(server)
+      return request(server)
       .delete('/api/rentals/' + rentalId)
       .set('x-auth-token', token)
-      .send(rental)
+      .send()
     };
-    it('should return 400 if invalid rentalId is provided', () => {
-      rentalId = '';
-    })
-  })
+
+    it('should return 404 if invalid rentalId is provided', async () => {
+      rentalId = 1;
+      const res = await exec();
+      expect(res.status).toBe(404);
+    });
+
+    it('should return 400 if valid but non-existent rentalId is provided', async () => {
+      // rentalId = mongoose.Types.ObjectId();
+      const res = await exec();
+      expect(res).toBe(400);
+    });
+
+    // toMatchObject
+
+  });
  
 });
