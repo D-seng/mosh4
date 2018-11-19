@@ -1,17 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const { Genre } = require('../models/genre');
-const { Movie, validate } = require('../models/movie') 
+const { Movie, validate } = require('../models/movie');
+const auth = require('../middleware/auth');
 
 //To render html, see Express - Advanced Topics, Lesson 9. It uses Pug as an example, but see how to use Vue.
-// List all genres.
-router.get('/', async (req, res) => {
-  const movies = await Movie.find().sort('title');
-  res.send(movies);
-});
 
-// Add a genre.
-router.post('/', async (req, res) => {
+// Add a movie.
+router.post('/', auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -33,6 +29,12 @@ router.post('/', async (req, res) => {
   res.send(movie);
 }
 );
+
+// List all genres.
+router.get('/', async (req, res) => {
+  const movies = await Movie.find().sort('title');
+  res.send(movies);
+});
 
 // Modify a movie.
 router.put('/:id', async (req, res) => {

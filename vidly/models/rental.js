@@ -28,6 +28,10 @@ const customerSchema = new mongoose.Schema({
   }
 });
 
+
+// Use a custom schema because the primary movie schema
+// in the movie model may have too many properties for our purposess.
+
 const movieSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -66,8 +70,9 @@ const Rental = mongoose.model('Rental', rentalSchema);
 // will be set by the server, not by the user.
 function validateRental(rental) {
   const schema = {
-    movieId: Joi.objectId().required(),
-    customerId: Joi.objectId().required()
+    customerId: Joi.objectId().required(),
+    movieId: Joi.objectId().required()
+    
   }
   return Joi.validate(rental, schema)
 }

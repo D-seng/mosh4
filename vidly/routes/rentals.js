@@ -7,16 +7,12 @@ const { Rental, validate } = require('../models/rental');
 const Fawn = require('fawn');
 const auth = require('../middleware/auth')
 const validateObjectId = require('../middleware/validateObjectId');
-
-
+const winston = require('winston');
+// Organize routes in CRUD order: post, get, put, delete.
 
 Fawn.init(mongoose);
   // To render html, see Express - Advanced Topics, Lesson 9. It uses Pug as an example, but see how to use Vue.
     // List all rentals.
-  router.get('/', auth, async (req, res) => {
-      const rentals = await Rental.find().sort('-dateCheckedOut');
-      res.send(rentals);
-    });
 
 // Add a rental.
 router.post('/', auth, async (req, res) => {
@@ -74,12 +70,27 @@ try {
 }
 );
 
-// Modify a rental.
-router.put('/:id', async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+// Get all rentals.
+router.get('/', auth, async (req, res) => {
+  const rentals = await Rental.find().sort('-dateCheckedOut');
+  res.send(rentals);
+});
 
-  const movie = await Movie.findByIdAndUpdate(req.params.id, { name: req.body.name },
+// Get a rental.
+router.get('/:id', async (req, res) => {
+  const movie = await Movie.findById(req.params.id);
+  if (!movie) return res.status(400).send('Rental not found');
+  res.send(movie);
+})
+
+// Modify a rental.
+router.put('/:id', auth, async (req, res) => {
+  winston.info(req.body);
+  winston.info(req.params.id);
+  const { error } = validate(req.body);
+  if (error) return res.status(418).send(error.details[0].message);
+
+  const rental = await Rental.findByIdAndUpdate(req.params.id, { name: req.body.name },
     { new: true });
   if (!movie) return res.status(404).send('Movie with given ID not found');
   res.send(movie);
@@ -94,11 +105,6 @@ router.delete('/:id', validateObjectId, async (req, res) => {
   res.send(rental);
 })
 
-// Get a rental.
-router.get('/:id', async (req, res) => {
-  const movie = await Movie.findById(req.params.id);
-  if (!movie) return res.status(400).send('Rental not found');
-  res.send(movie);
-})
+
 
 module.exports = router

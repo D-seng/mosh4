@@ -14,6 +14,7 @@ let movie;
 let genre;
 let movieId;
 let customerId;
+let rentalId;
 
   beforeEach(async () => {
     server = require('../../app');
@@ -54,6 +55,7 @@ let customerId;
       }
     });
     await rental.save();
+    rentalId = rental._id;
 
   });
 
@@ -65,22 +67,6 @@ let customerId;
     await server.close();
   });
 
-  describe('GET /', async () => {
-//add another rental for the testing of GET.
-
-    const exec = () => {
-      return request(server)
-        .get('/api/rentals')
-        .set('x-auth-token', token)
-    };
-
-    it('should return 401 if no valid token is provided', async () =>{
-      token = '';
-      const res = await exec();
-      expect(res.status).toBe(401);
-    });
-  });
-
   describe('POST /', async () => {
 
     const exec = () => {
@@ -88,21 +74,21 @@ let customerId;
         .post('/api/rentals')
         .set('x-auth-token', token)
         .send({ customerId, movieId });
-    };    
+    };
 
-    it('should return 401 if invalid movie is provided', async () => {
+    it('should return 401 if no token is provided', async () => {
       token = '';
       const res = await exec();
       expect(res.status).toBe(401);
     });
 
-    it('should return 400 if invalid movieId is provided', async () => {
+    it('should return 400 if no movieId is provided', async () => {
       movieId = '';
       const res = await exec();
       expect(res.status).toBe(400);
     });
 
-    it('should return 400 if invalid customerId is provided', async () => {
+    it('should return 400 if no customerId is provided', async () => {
       customerId = '';
       const res = await exec();
       expect(res.status).toBe(400);
@@ -124,11 +110,63 @@ let customerId;
 
   });
 
-  describe('DELETE /:id', () => {
+  describe('GET /', async () => {
+//add another rental for the testing of GET.
 
-    beforeEach(() => {
-      rentalId = rental._id;
+    const exec = () => {
+      return request(server)
+        .get('/api/rentals')
+        .set('x-auth-token', token)
+    };
+
+    it('should return 401 if no token is provided', async () =>{
+      token = '';
+      const res = await exec();
+      expect(res.status).toBe(401);
     });
+
+    it('should return 400 if invalid token is provided', async () => {
+      token = 1;
+      const res = await exec();
+      expect(res.status).toBe(400);
+    });
+  });
+
+  describe('PUT /:id', () => {
+
+    beforeEach(async () =>{
+      customerId = mongoose.Types.ObjectId();
+      customer = new Customer({
+        _id: customerId,
+        name: 'abcde',
+        phone: '123456789'
+      });
+      await customer.save();
+    });
+
+    const exec = () => {
+      return request(server)
+        .put('/api/rentals/' + rentalId)
+        .set('x-auth-token', token)
+        .send( {customerId: customerId, movieId: movieId });
+    };
+
+      it('should return 401 if user provides no token', async () => {
+        token = '';
+        const res = await exec();
+        expect(res.status).toBe(401);
+      });
+
+      it('should return 400 if user provides invalid token', async () => {
+        token = 1;
+        const res = await exec();
+        expect(res.status).toBe(400);
+      });
+
+
+    });
+
+  describe('DELETE /:id', () => {
 
     const exec = () => {
       return request(server)
@@ -144,12 +182,16 @@ let customerId;
     });
 
     it('should return 400 if valid but non-existent rentalId is provided', async () => {
-      // rentalId = mongoose.Types.ObjectId();
+      rentalId = mongoose.Types.ObjectId();
       const res = await exec();
-      expect(res).toBe(400);
+      expect(res.status).toBe(400);
     });
 
-    // toMatchObject
+    it('should return the rental if valid rentalId is passed', async () => {
+      const res = await exec();
+      expect(res.body).toHaveProperty('movie.title', '12345')
+      expect(res.body).toHaveProperty('customer.name', 'abcde')
+    });
 
   });
  
