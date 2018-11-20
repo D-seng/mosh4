@@ -2,25 +2,32 @@ const request = require('supertest');
 const { Movie } = require('../../models/movie');
 const { Genre } = require('../../models/genre');
 const { User } = require('../../models/user');
+const winston = require('winston');
 
 const mongoose = require('mongoose');
 
 describe('/api/genres', () => {
   let server;
   let token;
+  let genre;
   let genreId;
   let title;
 
   beforeEach(async() => { 
       server = require('../../app');
       token = new User().generateAuthToken();
-      genre = new Genre({
-        name: 'abcde'
-      })
-      genreId = genre._id;
-      await genre.save();
+      genreId = mongoose.Types.ObjectId().toHexString();
+    winston.info('AT CREATION ' + genreId)
 
-      let title = '12345'
+      genre = new Genre({
+        name: 'abcde',
+        id: genreId
+      })
+      
+      await genre.save();
+      // genreId = genre._id;
+
+      title = '12345'
    });
 
   afterEach(async () => { 
@@ -54,11 +61,17 @@ describe('/api/genres', () => {
     });
 
     it('should return 400 if movie title is less than 5 characters', async () => {
-      let movie = '1234'
+      title = '1234'
       const res = await exec();
       expect(res.status).toBe(400);
     });
 
+    it('should return 418 if genre ID is invalid', async () => {
+      // genreId = 1;
+      winston.info('FROM TEST ' + genreId)
+      const res = await exec();
+      expect(res.status).toBe(400);
+    });
   })
 });
 

@@ -3,16 +3,21 @@ const router = express.Router();
 const { Genre } = require('../models/genre');
 const { Movie, validate } = require('../models/movie');
 const auth = require('../middleware/auth');
+const winston = require('winston');
 
 //To render html, see Express - Advanced Topics, Lesson 9. It uses Pug as an example, but see how to use Vue.
 
 // Add a movie.
 router.post('/', auth, async (req, res) => {
+
+  
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
+  winston.info(req.body.genreId);
   const genre = await Genre.findById(req.body.genreId);
-  if (!genre) return res.status(400).send('Invalid genre.');
+  winston.info('const genre: ' + genre);
+  if (!genre) return res.status(418).send('Invalid genre.');
 
   // Use only two properties of the embedded genre object because it could have other properties
   // and because it will definitely have a version id (which we don't want)
