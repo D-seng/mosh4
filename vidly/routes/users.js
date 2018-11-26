@@ -1,5 +1,6 @@
 const auth = require('../middleware/auth');
 const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 const _ = require('lodash');
 const express = require('express');
 const winston = require('winston');

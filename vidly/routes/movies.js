@@ -9,12 +9,11 @@ const winston = require('winston');
 
 // Add a movie.
 router.post('/', auth, async (req, res) => {
-
-  
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  winston.info(req.body.genreId);
+  winston.info(req.body);
+  // return res.status(418).send();
   const genre = await Genre.findById(req.body.genreId);
   winston.info('const genre: ' + genre);
   if (!genre) return res.status(418).send('Invalid genre.');
@@ -54,10 +53,10 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete a movie.
-router.delete('/:id', async (req, res) => {
-  const movie = await Genre.findByIdAndRemove(req.params.id);
+router.delete('/:id', auth, async (req, res) => {
+  const movie = await Movie.findByIdAndRemove(req.params.id);
   if (!movie) return res.status(400).send('Movie not found');
-  res.send(movie);
+  // res.send(movie);
 })
 
 router.get('/:id', async (req, res) => {
