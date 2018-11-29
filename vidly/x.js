@@ -82,3 +82,19 @@
   //     max: 50
   //   }
   // });
+
+
+// Expected: 1
+// Received: [{ "_id": "5bfd5329b49407be0522fb9e", "dailyRentalRate": 2, "genre": { "_id": "5bfd5329b49407be0522fb9c", "name": "abcde" }, "numberInStock": 2, "title": "12345" }, {
+//   "_id": "5bfd5329b49407be0522fba5", "dailyRe
+// ntalRate": 2, "genre": {"_id": "5bfd5329b49407be0522fba3", "name": "abcde"}, "numberInStock": 2, "title": "12345"}, {"_id": "5bfd5329b49407be0522fbac", "dailyRentalRate": 2, "genre": {"_id": "5bfd5329b49407be0522fbaa",
+// "name": "abcde"
+// }, "numberInStock": 2, "title": "12345"}, { "_id": "5bfd5329b49407be0522fbb9", "dailyRentalRate": 2, "genre": { "_id": "5bfd5329b49407be0522fbb7", "name": "abcde" }, "numberInStock": 2, "title": "12345" }, { "_id": "5bfd5329b49407be0522fb9f", "dailyRentalRate": 2, "genre": { "_id": "5bfd5329b49407be0522fb9d", "name": "rstuv" }, "numberInStock": 2, "title": "56789" }, { "_id": "5bfd5329b49407be0522fba6", "dailyRentalRate": 2, "genre": { "_id": "5bfd5329b49407be0522fba4", "name": "rstuv" }, "numberInStock": 2, "title": "56789" }, { "_id": "5bfd5329b49407be0522fbad", "dailyRentalRate": 2, "genre": { "_id": "5bfd5329b49407be0522fbab", "name": "rstuv" }, "numberInStock": 2, "title": "56789" }, { "_id": "5bfd5329b49407be0522fbba", "dailyRentalRate": 2, "genre": { "_id": "5bfd5329b49407be0522fbb8", "name": "rstuv" }, "numberInStock": 2, "title": "56789" }]
+
+
+// Expected: 1
+// Received: {
+//   "header": {
+//     "connection": "close", "content-length": "1177", "content-type": "application/json; charset=utf-8", "date": "Tue, 27 Nov 2018 14:25:30 GMT", "etag": "W/\"499-qUxEBTwu2Pz7UPP8bHJVggfbAJk\"", "x-
+//     powered - by": "Express"}, "req": {"data": undefined, "headers": {"user - agent": "node - superagent / 3.8.3", "x - auth - token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmZkNTNkYWVjMDQ0ZmJlYWUyZWIyOWMiLCJpYXQiOjE1NDMzMj
+//     g3MzB9.5xlnI8t_Slbo0Rzn_m2lr2nytm - JFViX_QslyILYwIU"}, "method": "GET", "url": "http://127.0.0.1:52494/api/movies"}, "status": 200, "text": "[{\"_id\":\"5bfd53daec044fbeae2eb286\",\"title\":\"12345\",\"genre\":{\"_id\":\"5bfd53daec044fbeae2eb284\",\"name\":\"abcde\"},\"numberInStock\":2,\"dailyRentalRate\":2},{\"_id\":\"5bfd53daec044fbeae2eb28d\",\"title\":\"12345\",\"genre\":{\"_id\":\"5bfd53daec044fbeae2eb28b\",\"name\":\"abcde\"},\"numberInStock\":2,\"dailyRentalRate\":2},{\"_id\":\"5bfd53daec044fbeae2eb294\",\"title\":\"12345\",\"genre\":{\"_id\":\"5bfd53daec044fbeae2eb292\",\"name\":\"abcde\"},\"numberInStock\":2,\"dailyRentalRate\":2},{\"_id\":\"5bfd53daec044fbeae2eb2a1\",\"title\":\"12345\",\"genre\":{\"_id\":\"5bfd53daec044fbeae2eb29f\",\"name\":\"abcde\"},\"numberInStock\":2,\"dailyRentalRate\":2},{\"_id\":\"5bfd53daec044fbeae2eb287\",\"title\":\"56789\",\"genre\":{\"_id\":\"5bfd53daec044fbeae2eb285\",\"name\":\"rstuv\"},\"numberInStock\":2,\"dailyRentalRate\":2},{\"_id\":\"5bfd53daec044fbeae2eb28e\",\"title\":\"56789\",\"genre\":{\"_id\":\"5bfd53daec044fbeae2eb28c\",\"name\":\"rstuv\"},\"numberInStock\":2,\"dailyRentalRate\":2},{\"_id\":\"5bfd53daec044fbeae2eb295\",\"title\":\"56789\",\"genre\":{\"_id\":\"5bfd53daec044fbeae2eb293\",\"name\":\"rstuv\"},\"numberInStock\":2,\"dailyRentalRate\":2},{\"_id\":\"5bfd53daec044fbeae2eb2a2\",\"title\":\"56789\",\"genre\":{\"_id\":\"5bfd53daec044fbeae2eb2a0\",\"name\":\"rstuv\"},\"numberInStock\":2,\"dailyRentalRate\":2}]"}

@@ -176,7 +176,8 @@ describe('/api/genres', () => {
       token = '';
       const res = await exec();
       expect(res.status).toBe(401);
-    })
+    });
+    
     it('should return a 404 error if no genre with given id exists', async () => {
       id = mongoose.Types.ObjectId();
       const res = await exec();
@@ -193,11 +194,9 @@ describe('/api/genres', () => {
 
     it('should delete the genre if a valid id is passed', async () => {
        await exec();
-
       const delGenre = await Genre.findById(id);
       expect(delGenre).toBeNull();
     });
-
 
     it('should return the genre after it is deleted', async () => {
       // expect(exec).toBe('a');
