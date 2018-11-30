@@ -5,6 +5,7 @@ const { Movie } = require('../../models/movie');
 const { Customer } = require('../../models/customer');
 const { Genre } = require('../../models/genre');
 const mongoose = require('mongoose');
+const winston = require('winston');
 
 describe('/api/rentals', () => {
 let token;
@@ -132,6 +133,29 @@ let rentalId;
     });
   });
 
+  describe('GET /:id', async () => {
+
+    const exec = () => {
+       return request(server)
+       .get('/api/rentals/' + rentalId)
+       .set('x-auth-token', token)
+    };
+
+    it('should return 400 if invalid rentalId is passed', async () => {
+      rentalId = mongoose.Types.ObjectId();
+      const res = await exec();
+      expect(res.status).toBe(400);
+    });
+
+    it('should return the rental', async () => {
+      const res = await exec();
+      expect(res.body).toHaveProperty(rental.customer, 1);
+    });
+
+
+  });
+   
+
   describe('PUT /:id', () => {
 
     beforeEach(async () =>{
@@ -163,6 +187,18 @@ let rentalId;
         expect(res.status).toBe(400);
       });
 
+    it('should return 418 if user provides invalid customerId', async () => {
+      customerId = 1;
+      const res = await exec();
+      expect(res.status).toBe(418);
+    });
+
+    it('should return 404 if user provides invalid rentalId', async () => {
+      rentalId = mongoose.Types.ObjectId();
+      winston.info("RENTAL ID FROM TEST: " + rentalId);
+      const res = await exec();
+      expect(res.status).toBe(404);
+    });
 
     });
 
