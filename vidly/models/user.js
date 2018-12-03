@@ -65,8 +65,7 @@ function validateUser(user) {
   // return Joi.validate(userSchema.password, new PasswordComplexity(complexityOptions), (err, value) => {
 
   }
-
-
+  
 exports.User = User;
 exports.validate = validateUser;
 exports.userSchema = userSchema;

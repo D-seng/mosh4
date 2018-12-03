@@ -15,11 +15,11 @@ router.post('/', auth, async (req, res) => {
   const genre = await Genre.findById(req.body.genreId);
   if (!genre) return res.status(418).send('Invalid genre.');
 
-  winston.info('TITLE FROM POST REQ.BODY: ' + req.body.title);
-  winston.info('GENREID FROM POST REQ.BODY: ' + req.body.genreId);
-  winston.info('GENRENAME FROM POST REQ.BODY: ' + req.body.genreName);
-  winston.info('NUMBERINSTOCK FROM POST REQ.BODY: ' + req.body.numberInStock);
-  winston.info('DAILYRENTALRATE FROM POST REQ.BODY: ' + req.body.dailyRentalRate);
+  // winston.info('TITLE FROM POST REQ.BODY: ' + req.body.title);
+  // winston.info('GENREID FROM POST REQ.BODY: ' + req.body.genreId);
+  // winston.info('GENRENAME FROM POST REQ.BODY: ' + req.body.genreName);
+  // winston.info('NUMBERINSTOCK FROM POST REQ.BODY: ' + req.body.numberInStock);
+  // winston.info('DAILYRENTALRATE FROM POST REQ.BODY: ' + req.body.dailyRentalRate);
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 

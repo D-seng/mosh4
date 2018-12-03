@@ -42,6 +42,7 @@ let rentalId;
     });
     await customer.save();
 
+    // winston.info("MOVIE ID AT CREATION: " + movieId);
     rental = new Rental({
       customer: {
         _id: customerId,
@@ -109,6 +110,20 @@ let rentalId;
       expect(res.status).toBe(404);
     });
 
+    it('should return the rental', async () => {
+      // winston.info("MOVIE ID AT POST TEST: " + movieId);
+      const res = await exec();
+      expect(res.body).toHaveProperty('movie.title', '12345');
+      expect(res.body).toHaveProperty('customer.name', 'abcde');
+    });
+
+    it('should return 500 if rental does not save', async () => {
+  
+            // expect(movieId).toBe(1);
+      // const res = await exec();
+      // expect(res).toBe(500);
+    });
+
   });
 
   describe('GET /', async () => {
@@ -131,6 +146,27 @@ let rentalId;
       const res = await exec();
       expect(res.status).toBe(400);
     });
+
+    it('should return the rentals', async () => {
+    
+      rental = new Rental({
+        customer: {
+          _id: customerId,
+          name: 'abcde',
+          phone: '123456789'
+        },
+        movie: {
+          _id: movieId,
+          title: '67890',
+          numberInStock: 6,
+          dailyRentalRate: 2
+        }
+      });
+      await rental.save();
+      const res = await exec();
+      expect(res.body.some(r => r.movie.title === '12345')).toBeTruthy();
+      expect(res.body.some(r => r.movie.title === '67890')).toBeTruthy();
+    });
   });
 
   describe('GET /:id', async () => {
@@ -148,14 +184,15 @@ let rentalId;
     });
 
     it('should return the rental', async () => {
+      Rental.insertMany( { },
+        {})
+
       const res = await exec();
-      expect(res.body).toHaveProperty(rental.customer, 1);
+      expect(res.body).toHaveProperty('movie.title', '12345');
+      expect(res.body).toHaveProperty('customer.name', 'abcde');
     });
-
-
   });
    
-
   describe('PUT /:id', () => {
 
     beforeEach(async () =>{
@@ -195,11 +232,16 @@ let rentalId;
 
     it('should return 404 if user provides invalid rentalId', async () => {
       rentalId = mongoose.Types.ObjectId();
-      winston.info("RENTAL ID FROM TEST: " + rentalId);
+      // winston.info("RENTAL ID FROM TEST: " + rentalId);
       const res = await exec();
       expect(res.status).toBe(404);
     });
 
+    it('should return the rental', async () => {
+      const res = await exec();
+      expect(res.body).toHaveProperty('movie.title', rental.movie.title);
+      expect(res.body).toHaveProperty('_id');
+    });
     });
 
   describe('DELETE /:id', () => {
@@ -232,3 +274,4 @@ let rentalId;
   });
  
 });
+
