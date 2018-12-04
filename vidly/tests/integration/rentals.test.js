@@ -110,6 +110,13 @@ let rentalId;
       expect(res.status).toBe(404);
     });
 
+    it('should return 500 if the rental does not save', async () => {
+      movie.numberInStock = 0;
+      movie.save();
+      const res = await exec();
+      expect(res.status).toBe(500);
+    });
+
     it('should return the rental', async () => {
       // winston.info("MOVIE ID AT POST TEST: " + movieId);
       const res = await exec();
@@ -184,9 +191,6 @@ let rentalId;
     });
 
     it('should return the rental', async () => {
-      Rental.insertMany( { },
-        {})
-
       const res = await exec();
       expect(res.body).toHaveProperty('movie.title', '12345');
       expect(res.body).toHaveProperty('customer.name', 'abcde');

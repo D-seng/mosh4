@@ -62,12 +62,14 @@ router.put('/:id', validationMware(validateMovie), async (req, res) => {
 
 // Delete a movie.
 router.delete('/:id', auth, async (req, res) => {
+
   const movie = await Movie.findByIdAndRemove(req.params.id);
   if (!movie) return res.status(400).send('Movie not found');
-  // res.send(movie);
+  res.send(movie);
 })
 
 router.get('/:id', async (req, res) => {
+  winston.info('req.params.id: ' + req.params.id);
   const movie = await Movie.findById(req.params.id);
   if (!movie) return res.status(400).send('Genre not found');
   res.send(movie);

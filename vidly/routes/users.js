@@ -15,7 +15,7 @@ const validateObjectId = require('../middleware/validateObjectId');
 
 //auth,
 router.get('/me', auth, async (req, res) => {
-  winston.info('/ME REQ.BODY: ' + req.user._id);
+  // winston.info('/ME REQ.BODY: ' + req.user._id);
   const user = await User.findById(req.user._id).select('-password');
   if(!user) return res.status(404).send();
   res.send(user);

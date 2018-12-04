@@ -12,8 +12,8 @@ describe('/api/movies', () => {
   let genre;
   let genreId;
   let title;
-  let movieId;
   let movie;
+  let movieId;
 
   beforeEach(async() => { 
       server = require('../../app');
@@ -114,7 +114,7 @@ describe('/api/movies', () => {
       ]);
     });
 
-    afterEach(()=> {
+    afterEach(() => {
 
     });
 
@@ -149,6 +149,51 @@ describe('/api/movies', () => {
       expect(res.body.some(m => m.genre.name === 'abcde')).toBeTruthy();
     })
 
+  });
+
+  describe('GET /:id', () => {
+    beforeEach(async() => {
+      title = 'movie title';
+      name = 'genre name'
+      numberInStock = 2;
+      dailyRentalRate = 2;
+      movie = new Movie({
+          title: title,
+          genre: {
+            _id: mongoose.Types.ObjectId(),
+            name: name
+          },
+          numberInStock: numberInStock,
+          dailyRentalRate: dailyRentalRate
+        });
+        await movie.save();
+        movieId = movie.id;
+    })
+
+    const exec = () => {
+      return request(server)
+      .get('/api/movies/' + movieId)
+      .send();
+    }
+
+    it('should return 400 if movie is not found', async () => {
+      movieId = mongoose.Types.ObjectId();
+      const res = await exec();
+      expect(res.status).toBe(400);
+    });
+
+    // const properties = [['name', name], ['email', email]]
+    // properties.forEach(function ([p, n]) {
+    //   expect(res.body).toHaveProperty(p, n);
+    // });
+
+    it('should return the movie', async () => {
+      const res = await exec();
+      const properties = [['title', title], ['genre.name', name]];
+      properties.forEach(function ([p, q]) {
+        expect(res.body).toHaveProperty(p, q);
+      });
+    });
   });
 
   // TO DO: VALIDATE FUNCTIONS IN BOTH ROUTES AND MODEL FILE.
@@ -198,7 +243,7 @@ describe('/api/movies', () => {
     });
   });
 
-  describe("DELETE /", () => {
+  describe("DELETE /:id", () => {
     
     beforeEach(async() => {
       movie = new Movie({
@@ -212,8 +257,7 @@ describe('/api/movies', () => {
       });
       movieId = movie._id
       await movie.save();
-      
-    })
+    });
     
     const exec = () => {
       return request(server)
@@ -239,7 +283,15 @@ describe('/api/movies', () => {
       const res = await exec()
       expect(res.status).toBe(400);
     });
-  })
+
+    it('should return the movie', async () => {
+      const res = await exec();
+      const properties = [['title', title],['genre.name', genre.name],['dailyRentalRate', 2],['numberInStock', 2]];
+      properties.forEach(function([p, q]) {
+        expect(res.body).toHaveProperty(p, q);
+      });
+  });
+});
 });
 
 

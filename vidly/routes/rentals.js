@@ -80,7 +80,7 @@ router.get('/:id', async (req, res) => {
 // Modify a rental.
 router.put('/:id', auth, async (req, res) => {
  
-  winston.info("RENTAL PARAMS.ID: " + req.params.id);
+  // winston.info("RENTAL PARAMS.ID: " + req.params.id);
   const { error } = validate(req.body);
   if (error) return res.status(418).send(error.details[0].message);
 

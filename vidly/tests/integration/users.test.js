@@ -22,7 +22,7 @@ describe('api/users', () => {
 
     describe('POST /', () => {
 
-      beforeEach(() => {
+      beforeEach(async () => {
         name = '12345';
         email = 'example@mail.com';
         password = 'foobar';
